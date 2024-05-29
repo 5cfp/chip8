@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <cstdlib>
 #include <fstream>
 
 
@@ -45,12 +46,17 @@ uint8_t fontset[FONTSET_SIZE] =
 	0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
+// random function
+uint8_t randByte (uint8_t random){
+        srand(static_cast<unsigned int>(time(0)));
+        return random = rand();
+}
 
 // a function to initilaize the emulator
 void initilaize(){
     
     pc = START_ADDRESS; // Initialize pc from the start address
-    opcode = 0; // Reset opcode
+    opcode = 0; // Reset 
     Index = 0; // reset
     sp = 0; // reset
 
