@@ -1,2 +1,2 @@
-A chip8 emulator/interpreter written in C++
+A chip8 emulator/interpreter written in C++\n
 Work in progress
