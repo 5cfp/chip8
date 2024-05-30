@@ -1,8 +1,6 @@
-#include <iostream>
-#include "chip8.hpp"
+#include "main.hpp"
 
 int main(){
-    std::cout << "Chip8 Emulator" << std::endl;
     initilaize();
     return 0;
 }

@@ -1,50 +1,4 @@
-#include <cstdint>
-#include <cstdlib>
-#include <fstream>
-
-
-// Define memory, registers, stack, and others
-uint8_t V[16];
-uint16_t memory[4096];
-uint16_t Index;
-uint16_t pc;
-uint16_t stack[16];
-uint8_t sp;
-uint8_t delaytimer;
-uint8_t soundtimer;
-uint8_t keys[16];
-uint32_t screen[64 * 32];
-uint16_t opcode;
-
-// Memory START_ADDRESS because Chip8 programes starts from this address
-const unsigned int START_ADDRESS = 0x200;
-
-// the start address of the fontset in chip8 memory
-const unsigned int FONTSET_START_ADDRESS = 0x50;
-
-// chip8 all 16 characters
-const unsigned int FONTSET_SIZE = 80;
-
-// characters sprites
-uint8_t fontset[FONTSET_SIZE] =
-{
-	0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
-	0x20, 0x60, 0x20, 0x20, 0x70, // 1
-	0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
-	0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
-	0x90, 0x90, 0xF0, 0x10, 0x10, // 4
-	0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
-	0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
-	0xF0, 0x10, 0x20, 0x40, 0x40, // 7
-	0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
-	0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
-	0xF0, 0x90, 0xF0, 0x90, 0x90, // A
-	0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
-	0xF0, 0x80, 0x80, 0x80, 0xF0, // C
-	0xE0, 0x90, 0x90, 0x90, 0xE0, // D
-	0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-	0xF0, 0x80, 0xF0, 0x80, 0x80  // F
-};
+#include "chip8.hpp"
 
 // random function
 uint8_t randByte (uint8_t random){
@@ -54,6 +8,8 @@ uint8_t randByte (uint8_t random){
 
 // a function to initilaize the emulator
 void initilaize(){
+
+    std::cout << "Chip8 Emulator!!!" << std::endl;
     
     pc = START_ADDRESS; // Initialize pc from the start address
     opcode = 0; // Reset 
@@ -107,5 +63,67 @@ void loadrom(const char *filename){
         // free the buffer
         delete[] buffer;
     }
+
+    else{
+        std::cerr << "Feild to open file: " << filename << std::endl;
+    }
+
+}
+
+void emulatecycle(){
+
+
+
+    pc += 2;
+}
+
+void updateTimers(){
+
+    // delay timer decrement every one cycle until zero. it will not go below zero because its unsigned int
+    if (delaytimer > 0){
+        --delaytimer;
+    }
+
+    // sound timer decrement every one cycle until zero if. if soundtimer == 1 it will beep. it will not go below zero because its unsigned int
+    if (soundtimer > 0){
+        if (soundtimer == 1){
+            // beep
+        }
+        --soundtimer;
+    }
+}
+
+
+/*
+and now the moment you all been waiting for
+1
+2
+3
+===================The Instructions========================
+*/
+
+
+// 00E0 CLS: Clear the display.
+void OP_00E0(){
+
+}
+
+// 00EE RET: Return from the subroutine.
+void OP_0EE(){
+
+}
+
+// 1nnn JP: Jump to location nnn.
+void OP_1nnn(){
+
+}
+
+// 2nnn CALL: Call subroutine at nnn.
+void OP_2nnn(){
+
+}
+
+// 3xkk - SE Vx, byte: Skip next instruction if Vx = kk.
+void OP_3xkk(){
 
 }
