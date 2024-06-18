@@ -103,27 +103,122 @@ and now the moment you all been waiting for
 */
 
 
-// 00E0 CLS: Clear the display.
 void OP_00E0(){
-
+    // clear screen code
 }
 
-// 00EE RET: Return from the subroutine.
 void OP_0EE(){
-
+    pc = stack[sp];
+    --sp;
 }
 
-// 1nnn JP: Jump to location nnn.
 void OP_1nnn(){
-
+    uint16_t address = opcode & 0x0FFFu;
+    pc = address;
 }
 
-// 2nnn CALL: Call subroutine at nnn.
 void OP_2nnn(){
-
+    uint16_t address = opcode & 0x0FFFu;
+    ++sp;
+    stack[sp] = pc;
+    pc = address;
 }
 
-// 3xkk - SE Vx, byte: Skip next instruction if Vx = kk.
 void OP_3xkk(){
+    uint8_t x = (opcode & 0x0F00u) >> 8u;
+    uint8_t byte = opcode & 0x00FFu;
 
+    if(V[x] == byte){
+        pc += 2;
+    }
+}
+
+void OP_4xkk(){
+    uint8_t x = (opcode & 0x0F00u) >> 8u;
+    uint8_t byte = opcode & 0x00FFu;
+
+    if(V[x] != byte){
+        pc += 2;
+    }
+}
+
+void OP_5xy0(){
+    uint8_t x = (opcode & 0x0F00u) >> 8u;
+    uint8_t y = (opcode & 0x00F0u) >> 4u;
+
+    if(V[x] == V[y]){
+        pc += 2;
+    }
+}
+
+void OP_6xkk(){
+    uint8_t x = (opcode & 0x0F00u) >> 8u;
+    uint8_t byte = opcode & 0x00FFu;
+
+    V[x] = byte;
+}
+
+void OP_7xkk(){
+    uint8_t x = (opcode & 0x0F00u) >> 8u;
+    uint8_t byte = opcode & 0x00FFu;
+
+    V[x] += byte;
+}
+
+void OP_8xy0(){
+    uint8_t x = (opcode & 0x0F00u) >> 8u;
+    uint8_t y = (opcode & 0x00F0u) >> 4u;
+
+    V[x] = V[y];
+}
+
+void OP_8xy1(){
+    uint8_t x = (opcode & 0x0F00u) >> 8u;
+    uint8_t y = (opcode & 0x00F0u) >> 4u;
+
+    V[x] |= V[y];
+}
+
+void OP_8xy2(){
+    uint8_t x = (opcode & 0x0F00u) >> 8u;
+    uint8_t y = (opcode & 0x00F0u) >> 4u;
+
+    V[x] &= V[y];
+}
+
+void OP_8xy3(){
+    uint8_t x = (opcode & 0x0F00u) >> 8u;
+    uint8_t y = (opcode & 0x00F0u) >> 4u;
+
+    V[x] ^= V[y];
+}
+
+void OP_8xy4(){
+    uint8_t x = (opcode & 0x0F00u) >> 8u;
+    uint8_t y = (opcode & 0x00F0u) >> 4u;
+
+    uint16_t sum = V[x] + V[y];
+
+    if (sum > 255U){
+        V[0xF] = 1;
+    }
+    else {
+        V[0xF] = 0;
+    }
+
+    V[x] = sum & 0xFFu;
+}
+
+void OP_8xy5(){
+    uint8_t x = (opcode & 0x0F00u) >> 8u;
+    uint8_t y = (opcode & 0x00F0u) >> 4u;
+
+    if (V[x] > V[y]){
+        V[0xF] = 1;
+    }
+    else {
+        V[0xF] = 0;
+    }
+
+    V[x] -= V[y];
 }
